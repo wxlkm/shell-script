@@ -3,6 +3,8 @@
 # author: wxlkm
 # 脚本中获取typeshell两种方式
 # 字符串变量的匹配删除操作:${var#}, ${var##}, ${var%}, ${var%%}
+# 实现本脚本的功能：awk
+# awk -F'/' '{print $NF}' /etc/passwd | sort | uniq -c
 
 unset sum
 declare -A sum
