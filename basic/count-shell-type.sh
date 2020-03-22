@@ -1,6 +1,8 @@
 #!/bin/bash
 # count the number of each shell type
 # author: wxlkm
+# 脚本中获取typeshell两种方式
+# 字符串变量的匹配删除操作:${var#}, ${var##}, ${var%}, ${var%%}
 
 unset sum
 declare -A sum
