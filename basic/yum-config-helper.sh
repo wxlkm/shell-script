@@ -4,7 +4,7 @@
 #2018-3-23
 
 backup_dir="/etc/yum.repos.d/"`date +%F`"-backup"
-mkdir $backup_dir
+[ -d $backup_dir ] || mkdir $backup_dir
 mv /etc/yum.repos.d/*.repo $backup_dir
 
 linux_version=$(cat /etc/redhat-release | awk '{print $4}'| awk -F"." '{print $1}')
@@ -44,7 +44,9 @@ elif [ "$mirror_type" = "3" ]; then
         fi
 
         echo "self-construct ceph mirrors installed"
-
+elif [ "$mirror_type" = "q" ]; then
+        mv $backup_dir/*.repo /etc/yum.repos.d/
+        exit
 else
         echo "mirror select wrong"
         exit
