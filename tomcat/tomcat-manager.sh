@@ -8,8 +8,8 @@ JAVA_HOME=
 [ ${#JAVA_HOME} -ne 0 ] && export JAVA_HOME
 
 #Add Java binary files to PATH
-[ ${#JAVA_HOME} -ne 0 ] && export PATH=$JAVA_HOME/bin:$PATH
-
+[ ${#JAVA_HOME} -ne 0 ] && PATH=$JAVA_HOME/bin:$PATH
+export PATH
 #CATALINA_HOME is the location of the configuration files of this instance of Tomcat
 CATALINA_HOME="/soft/server/apache-tomcat-8.5.53"
 
