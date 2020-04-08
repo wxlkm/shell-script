@@ -8,16 +8,19 @@
 install_java7() {
         echo "install java-1.7.0-openjdk......"
         yum -y install java-1.7.0-openjdk
+        yum -y install java-1.7.0-openjdk-devel
 }
 
 install_java8() {
         echo "install java-1.8.0-openjdk......"
         yum -y install java-1.8.0-openjdk
+        yum -y install java-1.8.0-openjdk-devel
 }
 
 install_java11() {
         echo "install java-11-openjdk......"
         yum -y install java-11-openjdk
+        yum -y install java-11-openjdk-devel
 }
 
 java -version &>/dev/null
