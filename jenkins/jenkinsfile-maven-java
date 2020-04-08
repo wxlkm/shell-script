@@ -1,0 +1,46 @@
+node("192.168.0.220")  {
+	//def mvnHome = '/usr/local/maven'
+
+	stage('git checkout') {
+		checkout([$class: 'GitSCM', branches: [[name: '${branch}']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'wxl2gitlab', url: 'git@192.168.0.223:mmt/mmt-solo.git']]])
+	}
+	
+	stage('maven build') {
+		sh '''
+		export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.242.b08-0.el7_7.x86_64
+		/usr/lib/apache-maven-3.6.3/bin/mvn clean package -Dmaven.test.skip=true
+		'''
+	}
+
+	# In this stage, should copy the ssh key to the app server.
+	stage('deploy') {
+		sh '''
+		export JAVA_HOME=/usr/local/jdk1.8
+		export TOMCAT_NAME=apache-tomcat-8.5.53
+		export TOMCAT_HOME=/soft/server/$TOMCAT_NAME
+		export TOMCAT_SERVER=192.168.0.181
+		export WWWROOT=$TOMCAT_HOME/mmt-solo/ROOT
+		
+		#stop the app before deploy
+		ssh root@${TOMCAT_SERVER} ${TOMCAT_HOME}/tomcat-manager-full.sh stop
+
+		#backup the app before deploy
+		#if [ -d $WWWROOT ]; then
+		#   mv $WWWROOT /home/appuser/backup/${TOMCAT_NAME}-$(date +"%F_%T")
+		#fi
+		
+		#copy the deploy file to the server
+		scp ${WORKSPACE}/target/*.?ar root@192.168.0.181:/soft/server/apache-tomcat-8.5.53/mmt-solo/
+		
+		#change the owner of the deploy file
+		ssh root@${TOMCAT_SERVER} chown appuser.appuser /soft/server/apache-tomcat-8.5.53/mmt-solo/*.?ar
+		
+		#startup the app after deploy		
+		ssh root@${TOMCAT_SERVER} ${TOMCAT_HOME}/tomcat-manager-full.sh start
+		'''
+	}
+
+	stage('test') {
+		sh "curl http://test.aliangedu.com/status.html"
+	}
+}
