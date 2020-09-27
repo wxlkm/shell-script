@@ -19,6 +19,10 @@ fi
 yum clean all
 yum makecache
 
+# install epel
+yum list | grep epel-release
+yum install -y epel-release
+
 # update rpm package include kernel"
 yum -y update
 rm -rf /etc/yum.repos.d/CentOS*
