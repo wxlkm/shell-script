@@ -1,5 +1,3 @@
-# shell-script
-some shell scripts
 
 jenkins目录  
 该目录下放了一些持续部署的一些脚本。  
