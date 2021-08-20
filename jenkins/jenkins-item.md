@@ -30,6 +30,7 @@ doBuild()
     mvn -f mixmedia-site/pom.xml clean package
 }
 
+
 doCopyToHWNode()
 {
 
@@ -43,6 +44,7 @@ doCopyToHWNode()
 
 
 }
+
 
 doDeploy()
 {
@@ -76,5 +78,6 @@ case $operation in
 	*)
         echo -e "\033[35m参数错误！\033[0m"
         exit 1
+
 
 esac
