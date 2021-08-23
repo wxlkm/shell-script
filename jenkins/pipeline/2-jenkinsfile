@@ -1,0 +1,24 @@
+node { 
+	stage('代码检出') {
+		checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'a1b870eb-1075-475c-9ee7-4ebfb4c94c51', url: 'http://192.168.10.171:8000/tilake/tilake-data-platform.git']]])
+	} 
+	stage('编译打包公共工程') {
+		sh "mvn -f commons clean install"
+	}
+	stage('编译打包工程') {
+		sh "mvn clean package -Dmaven.test.skip=true -pl data-server -am"
+	}
+	stage('镜像构建') {
+		sh "docker build -t data-server:${IMAGE_TAG} -f data-server/Dockerfile data-server"
+	}
+	stage('镜像上传') {
+		sh "docker tag data-server:${IMAGE_TAG} 192.168.10.171/tilake-data-platform/data-server:${IMAGE_TAG} "
+		withCredentials([usernamePassword(credentialsId: "9a2d6920-b9f5-410b-a2ef-eaa9aef294d3", passwordVariable: 'password', usernameVariable: 'username')]) {
+			sh "docker login -u ${username} -p ${password} 192.168.10.171"
+			sh "docker push 192.168.10.171/tilake-data-platform/data-server:${IMAGE_TAG}"
+		}
+		sh "docker rmi -f data-server:${IMAGE_TAG}"
+		sh "docker rmi -f 192.168.10.171/tilake-data-platform/data-server:${IMAGE_TAG}"
+	}
+ 
+}
