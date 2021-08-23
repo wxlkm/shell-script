@@ -1,6 +1,7 @@
 
 jenkins目录  
 该目录下放了一些持续部署的一些脚本。  
+  
 freestyle:  
   cicd.sh: 起停java应用：jar包。  
   cicd-start.sh: 调用cicd.sh start。  
