@@ -1,0 +1,47 @@
+//git凭证ID
+def git_auth="gitcicdcredential"
+//git地址
+def git_url="http://192.168.10.171:8000/tilake/tilake-opreation-service.git"
+
+//定义镜像名称
+def image_name = "tilake-opreation-service"
+
+//harbor地址
+def harbor_url="192.168.10.171"
+//harbor项目名称
+def harbor_project_name="tilake-opreation"
+//harbor凭证id
+def harbor_auth_id="5d767926-cd2c-4721-aeb9-38cc6b96b692"
+
+def jar_file="target/tilake-opreation-service.jar"
+
+node {
+
+    stage('拉取代码') {
+        checkout([$class: 'GitSCM', branches: [[name: "*/${branch}"]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[ url: "${git_url}"]]])
+    }
+    
+    stage('编译代码,打包') {
+            sh 'mvn clean package -Dfile.encoding=UTF-8 -DskipTests=true'
+            stash includes: 'target/*.jar', name: 'app'
+    }
+    
+    stage('构建镜像') {
+            unstash 'app'
+            sh "docker build --build-arg JAR_FILE=${JAR_FILE} --build-arg BUILD_ENV=${environment} -t ${harbor_url}/${harbor_project_name}/${image_name}:${tag} ."
+            //把镜像推送到harbor
+            withCredentials([usernamePassword(credentialsId: "${harbor_auth_id}", passwordVariable: 'password', usernameVariable: 'username')]) {
+                //登录harbor
+                sh "docker login -u ${username} -p ${password} ${harbor_url}"
+                //上传镜像
+                sh "docker push ${harbor_url}/${harbor_project_name}/${image_name}:${tag}"
+            }
+            //删除本地镜像
+            sh "docker rmi -f ${image_name}:${tag}"
+            sh "docker rmi -f ${harbor_url}/${harbor_project_name}/${image_name}:${tag}"
+            echo "完成编译，构建镜像"
+    }
+    stage('运行镜像'){
+        echo "镜像已上传，请用k8s进行重启!"
+    }
+}
