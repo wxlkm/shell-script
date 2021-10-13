@@ -1,0 +1,69 @@
+#note：使用docker maven镜像进行编译，然后制作docker镜像。
+pipeline {
+    agent none
+    stages {
+        stage('Checkout') {            
+            agent {
+                docker {
+                    image 'maven:3-alpine' 
+                    args '-v /u01/jenkins/home/.m2:/root/.m2' 
+                }
+            }
+            
+            steps {
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'cicduser', url: 'http://192.168.18.16:8000/intelligent-mam/rmt-intelligent-mam.git']]])          
+                sh 'mvn -B -DskipTests clean package' 
+            }
+        }
+
+        stage('Build image') { 
+            agent any
+            steps {
+                script{
+                    dir('mam-web-service/') {
+                        def customImage1 = docker.build("reg.wengegroup.com:19180/onemachine/mam-server:$tag")
+                            
+                        docker.withRegistry('http://reg.wengegroup.com:19180', 'harbor-credential') {
+                            customImage1.push()
+                            customImage1.push('latest')
+                        }
+                    }
+                    
+                    dir('mam-file-service/') {
+                        def customImage2 = docker.build("reg.wengegroup.com:19180/onemachine/mam-file:$tag")
+                        
+                        docker.withRegistry('http://reg.wengegroup.com:19180', 'harbor-credential') {
+                            customImage2.push()
+                            customImage2.push('latest')
+                        }
+                    }
+                    dir('mam-media-info-service/') {
+                        def customImage3 = docker.build("reg.wengegroup.com:19180/onemachine/mam-media:$tag")
+                        
+                        docker.withRegistry('http://reg.wengegroup.com:19180', 'harbor-credential') {
+                            customImage3.push()
+                            customImage3.push('latest')
+                        }
+                    }
+                    dir('mam-ai-service/') {
+                        def customImage = docker.build("reg.wengegroup.com:19180/onemachine/mam-ai:$tag")
+                        
+                        docker.withRegistry('http://reg.wengegroup.com:19180', 'harbor-credential') {
+                            customImage.push()
+                            customImage.push('latest')
+                        }
+                    }
+                    
+                    dir('mam-apache-tika/') {
+                        def customImage = docker.build("reg.wengegroup.com:19180/onemachine/apache-tika:$tag")
+                        
+                        docker.withRegistry('http://reg.wengegroup.com:19180', 'harbor-credential') {
+                            customImage.push()
+                            customImage.push('latest')
+                        }
+                    }                    
+                }
+            }
+        }
+    }
+}
