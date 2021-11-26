@@ -1,8 +1,8 @@
 #!/bin/bash
 source /etc/profile
 
-baseFolder='/u01/isi/sprint'
-serviceName='/manage-front'
+baseFolder='/your/base/dir'
+serviceName='yourservicename'
 packageName='dist'
 
 backuptime=`date +%Y%m%d%H%M%S`
