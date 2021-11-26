@@ -5,7 +5,7 @@ source /etc/profile
 CURDIR=$(cd $(dirname ${BASH_SOURCE[0]}); pwd )
 cd $CURDIR
 
-jarName="mixmedia-site"
+jarName="yourjarname"
 javaCommand="java -XX:+UseG1GC -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:+PrintGCDateStamps -XX:+PrintHeapAtGC -Xms4g -Xmx4g -jar -Dloader.path=libes6 ${jarName}.jar"
 
 #检查程序是否在运行
