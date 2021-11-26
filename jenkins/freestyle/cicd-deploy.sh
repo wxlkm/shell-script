@@ -1,8 +1,8 @@
 #!/bin/bash
 source /etc/profile
 
-baseFolder='/u01/isi/sprint'
-serviceName='resource'
+baseFolder='/your/path/sprint'
+serviceName='yourservice'
 packageName='ROOT'
 
 CURDIR=$(cd $(dirname ${BASH_SOURCE[0]}); pwd )
