@@ -1,10 +1,10 @@
 //git凭证ID
 def git_auth="gitcicdcredential"
 //git地址
-def git_url="http://192.168.10.171:8000/tilake/tilake-opreation-service.git"
+def git_url="http://192.xx.xx.xx:8000/fenzhi/fenzhi-service.git"
 
 //定义镜像名称
-def image_name = "tilake-opreation-service"
+def image_name = "some-service"
 
 //harbor地址
 def harbor_url="192.168.10.171"
