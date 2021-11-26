@@ -12,13 +12,13 @@ node {
 		sh "docker build -t data-server:${IMAGE_TAG} -f data-server/Dockerfile data-server"
 	}
 	stage('镜像上传') {
-		sh "docker tag data-server:${IMAGE_TAG} 192.168.10.171/tilake-data-platform/data-server:${IMAGE_TAG} "
+		sh "docker tag data-server:${IMAGE_TAG} 192.168.10.171/some-service/data-server:${IMAGE_TAG} "
 		withCredentials([usernamePassword(credentialsId: "9a2d6920-b9f5-410b-a2ef-eaa9aef294d3", passwordVariable: 'password', usernameVariable: 'username')]) {
 			sh "docker login -u ${username} -p ${password} 192.168.10.171"
-			sh "docker push 192.168.10.171/tilake-data-platform/data-server:${IMAGE_TAG}"
+			sh "docker push 192.168.xxx.xxx/some-service/data-server:${IMAGE_TAG}"
 		}
 		sh "docker rmi -f data-server:${IMAGE_TAG}"
-		sh "docker rmi -f 192.168.10.171/tilake-data-platform/data-server:${IMAGE_TAG}"
+		sh "docker rmi -f 192.168.xxx.xxx/some-service/data-server:${IMAGE_TAG}"
 	}
  
 }
