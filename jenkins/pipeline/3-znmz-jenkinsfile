@@ -11,7 +11,7 @@ pipeline {
             }
             
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'cicduser', url: 'http://192.168.18.16:8000/intelligent-mam/rmt-intelligent-mam.git']]])          
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'cicduser', url: 'http://192.xxx.xxx.16:8000/someservice/rmt-someservice.git']]])          
                 sh 'mvn -B -DskipTests clean package' 
             }
         }
@@ -21,43 +21,43 @@ pipeline {
             steps {
                 script{
                     dir('mam-web-service/') {
-                        def customImage1 = docker.build("reg.wengegroup.com:19180/onemachine/mam-server:$tag")
+                        def customImage1 = docker.build("xxx.xxx.com:19180/someservice/some-service1:$tag")
                             
-                        docker.withRegistry('http://reg.wengegroup.com:19180', 'harbor-credential') {
+                        docker.withRegistry('http://xxx.xxx.com:19180', 'harbor-credential') {
                             customImage1.push()
                             customImage1.push('latest')
                         }
                     }
                     
                     dir('mam-file-service/') {
-                        def customImage2 = docker.build("reg.wengegroup.com:19180/onemachine/mam-file:$tag")
+                        def customImage2 = docker.build("xxx.xxx.com:19180/someservice/some-service2:$tag")
                         
-                        docker.withRegistry('http://reg.wengegroup.com:19180', 'harbor-credential') {
+                        docker.withRegistry('http://xxx.xxx.com:19180', 'harbor-credential') {
                             customImage2.push()
                             customImage2.push('latest')
                         }
                     }
                     dir('mam-media-info-service/') {
-                        def customImage3 = docker.build("reg.wengegroup.com:19180/onemachine/mam-media:$tag")
+                        def customImage3 = docker.build("xxx.xxx.com:19180/someservice/some-service3:$tag")
                         
-                        docker.withRegistry('http://reg.wengegroup.com:19180', 'harbor-credential') {
+                        docker.withRegistry('http://xxx.xxx.com:19180', 'harbor-credential') {
                             customImage3.push()
                             customImage3.push('latest')
                         }
                     }
                     dir('mam-ai-service/') {
-                        def customImage = docker.build("reg.wengegroup.com:19180/onemachine/mam-ai:$tag")
+                        def customImage = docker.build("xxx.xxx.com:19180/onemachine/some-service4:$tag")
                         
-                        docker.withRegistry('http://reg.wengegroup.com:19180', 'harbor-credential') {
+                        docker.withRegistry('http://xxx.xxx.com:19180', 'harbor-credential') {
                             customImage.push()
                             customImage.push('latest')
                         }
                     }
                     
                     dir('mam-apache-tika/') {
-                        def customImage = docker.build("reg.wengegroup.com:19180/onemachine/apache-tika:$tag")
+                        def customImage = docker.build("xxx.xxx.com:19180/onemachine/some-service5:$tag")
                         
-                        docker.withRegistry('http://reg.wengegroup.com:19180', 'harbor-credential') {
+                        docker.withRegistry('http://xxx.xxx.com:19180', 'harbor-credential') {
                             customImage.push()
                             customImage.push('latest')
                         }
