@@ -1,19 +1,19 @@
 //git凭证ID
 def git_auth="gitcicdcredential"
 //git地址
-def git_url="http://192.xx.xx.xx:8000/fenzhi/fenzhi-service.git"
+def git_url="http://192.xx.xx.xx:8000/fenzhi/some-service.git"
 
 //定义镜像名称
 def image_name = "some-service"
 
 //harbor地址
-def harbor_url="192.168.10.171"
+def harbor_url="192.xxx.xxx.xxx"
 //harbor项目名称
-def harbor_project_name="tilake-opreation"
+def harbor_project_name="some-service"
 //harbor凭证id
 def harbor_auth_id="5d767926-cd2c-4721-aeb9-38cc6b96b692"
 
-def jar_file="target/tilake-opreation-service.jar"
+def jar_file="target/some-service.jar"
 
 node {
 
